@@ -1,7 +1,7 @@
 # capsesc-layout
 
 A tiny Android app that makes Caps Lock send Escape on a physical keyboard,
-system-wide, without root.
+and swaps Option and Cmd, system-wide, without root.
 
 ## Problem
 
@@ -9,6 +9,8 @@ system-wide, without root.
   paired over Bluetooth. It has no Esc key.
 - Tablet: Onyx Boox Go 7, Android 13, Boox firmware 4.2.
 - Use case: Termius (ssh) and vim, where Esc is essential.
+- The keyboard has a Mac bottom row (Option, then Cmd next to Space). Option
+  sends Alt and Cmd sends Meta, which puts Alt in the wrong place.
 
 What did not work:
 
@@ -26,11 +28,13 @@ Android lets any app ship extra physical-keyboard layouts. A layout file (KCM)
 can remap a key before the system interprets it, so Android never sees a
 Caps Lock press at all.
 
-- `res/raw/capsesc_us.kcm` is an overlay on the stock US layout with two lines
-  mapping Caps Lock to `ESCAPE`: one by Linux scancode (58), one by HID usage
-  (0x070039).
+- `res/raw/capsesc_us.kcm` is an overlay on the stock US layout. Each remap is
+  written twice, once by Linux scancode and once by HID usage:
+  - Caps Lock (58, 0x070039) to `ESCAPE`.
+  - Cmd (125/126, 0x0700e3/0x0700e7) to `ALT_LEFT`/`ALT_RIGHT`.
+  - Option (56/100, 0x0700e2/0x0700e6) to `META_LEFT`/`META_RIGHT`.
 - `res/xml/keyboard_layouts.xml` declares the layout
-  "English (US), Caps Lock = Esc".
+  "English (US), Caps Lock = Esc, Cmd = Alt".
 - `LayoutReceiver` is an empty receiver. The system never calls it; it only
   reads its meta-data to discover the layout.
 - `MainActivity` exists because Boox hides the relevant settings. It has
@@ -58,9 +62,13 @@ directly.
    from the file manager.
 2. Connect the keyboard over Bluetooth.
 3. Open the "Caps to Esc" app, tap "Open physical keyboard settings", tap the
-   keyboard's name, and choose "English (US), Caps Lock = Esc".
+   keyboard's name, and choose "English (US), Caps Lock = Esc, Cmd = Alt".
 4. Press Caps Lock in the app's key tester: it should show `KEYCODE_ESCAPE`
-   with Caps Lock state off.
+   with Caps Lock state off. Cmd should show `KEYCODE_ALT_LEFT` and Option
+   `KEYCODE_META_LEFT`.
+
+After installing an update, repeat step 3: on this tablet the new mappings only
+took effect once the layout was picked again in the keyboard settings.
 
 ## Things to know
 
@@ -68,6 +76,8 @@ directly.
 - The layout choice is stored per keyboard. Re-pairing or a firmware update
   may require picking it again.
 - Caps Lock is no longer available on a keyboard using this layout.
+- The tester shows the remapped keycode but the original scancode, so Cmd
+  reads `KEYCODE_ALT_LEFT` with scancode 125.
 - The layout is US English only. Other languages need their own KCM file and
   an extra `<keyboard-layout>` entry.
 - To remap more keys, add `map key <scancode> <KEYCODE>` lines to the KCM,

@@ -1,7 +1,21 @@
 # Overlay on top of the stock Generic (US) layout.
-# Caps Lock -> Escape, matched both by Linux scancode (58 = KEY_CAPSLOCK)
-# and by HID usage (keyboard page 0x07, usage 0x39 = Caps Lock).
+# Every key is matched both by Linux scancode and by HID usage
+# (keyboard page 0x07); the usage wins when the device reports one.
 type OVERLAY
 
+# Caps Lock -> Escape (scancode 58 = KEY_CAPSLOCK, usage 0x39).
 map key 58 ESCAPE
 map key usage 0x070039 ESCAPE
+
+# Swap Option and Cmd, so that Alt is the key next to Space.
+# Cmd (KEY_LEFTMETA 125 / KEY_RIGHTMETA 126, usages 0xe3 / 0xe7) -> Alt.
+map key 125 ALT_LEFT
+map key 126 ALT_RIGHT
+map key usage 0x0700e3 ALT_LEFT
+map key usage 0x0700e7 ALT_RIGHT
+
+# Option (KEY_LEFTALT 56 / KEY_RIGHTALT 100, usages 0xe2 / 0xe6) -> Meta.
+map key 56 META_LEFT
+map key 100 META_RIGHT
+map key usage 0x0700e2 META_LEFT
+map key usage 0x0700e6 META_RIGHT

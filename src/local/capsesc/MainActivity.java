@@ -27,8 +27,9 @@ public class MainActivity extends Activity {
 
         col.addView(text("1. Connect the keyboard over Bluetooth.\n"
                 + "2. Tap the first button, tap the keyboard's name, and choose\n"
-                + "    \"English (US), Caps Lock = Esc\".\n"
-                + "3. Come back here and press Caps Lock: the tester below should say KEYCODE_ESCAPE.", 18));
+                + "    \"English (US), Caps Lock = Esc, Cmd = Alt\".\n"
+                + "3. Come back here and press Caps Lock: the tester below should say KEYCODE_ESCAPE,\n"
+                + "    and Cmd should say KEYCODE_ALT_LEFT.", 18));
         col.addView(button("Open physical keyboard settings", Settings.ACTION_HARD_KEYBOARD_SETTINGS));
         col.addView(button("Open developer options", Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
         col.addView(button("Open About (build number)", Settings.ACTION_DEVICE_INFO_SETTINGS));
