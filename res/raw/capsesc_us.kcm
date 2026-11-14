@@ -1,0 +1,7 @@
+# Overlay on top of the stock Generic (US) layout.
+# Caps Lock -> Escape, matched both by Linux scancode (58 = KEY_CAPSLOCK)
+# and by HID usage (keyboard page 0x07, usage 0x39 = Caps Lock).
+type OVERLAY
+
+map key 58 ESCAPE
+map key usage 0x070039 ESCAPE
